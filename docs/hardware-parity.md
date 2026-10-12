@@ -1,6 +1,6 @@
 # Hardware parity
 
-> **Last reviewed:** 2026-10-10 · **Last updated:** 2026-10-10 · **Change:** major (first version: GPU, pen tablets, displays, gestures per platform against Photoshop 2026) · **Target:** Adobe Photoshop 2026
+> **Last reviewed:** 2026-10-12 · **Last updated:** 2026-10-12 · **Change:** minor (Android canvas touch gestures and regression coverage) · **Target:** Adobe Photoshop 2026
 
 Each hardware feature Photoshop 2026 (27.11.0) uses, per platform, against PhotoCraft. Photoshop
 side: its bundle (Metal and OpenCL paths, "Precise Color Management for HDR Display" and EDR
@@ -53,7 +53,8 @@ HDR display to verify.
 | Trackpad pinch zoom, two-finger pan | yes | yes; pinch scrolls instead in 0.6.0 (#2463) | partial |
 | Trackpad rotate (Rotate View) | yes | yes (`rotate_view.rs`) | done |
 | Touch Bar | yes (Intel Macs) | no | missing (low value) |
-| Touch screens (Windows) | yes | basic pointer only | partial |
+| Touch screens (Windows) | yes | basic pointer only; new generic touch handler awaits Windows device verification | partial |
+| Android tablet pinch zoom / two-finger pan | — | centroid-anchored zoom and pan; prevents painting until all fingers lift; 3 regression tests cover DPI, rotation, flips, invalid input and gesture lifecycle; physical gesture confirmation pending | partial |
 | 3D mouse, MIDI, Surface Dial | Surface Dial on Windows | no | missing (low value) |
 | Scanners (WIA / TWAIN) | WIA menu (Windows) | menu item live; no driver integration | partial |
 
@@ -62,3 +63,4 @@ HDR display to verify.
 | Date | Change | Summary |
 |---|---|---|
 | 2026-10-10 | major | First version |
+| 2026-10-12 | minor | Android canvas pinch/pan and stroke suppression; regression tests added, physical gesture verification pending. No estimated parity change. |

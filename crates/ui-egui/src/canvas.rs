@@ -2699,7 +2699,25 @@ pub fn canvas_view(app: &mut PhotocraftApp, ui: &mut egui::Ui, idx: usize, rect:
     // The wheel also scrolls over the scrollbars drawn on top of the canvas (last frame's hover).
     let bars_id = egui::Id::new(("pc-canvas-bars-hover", idx));
     let over_bars = ctx.data(|d| d.get_temp::<bool>(bars_id)).unwrap_or(false);
-    if response.hovered() || free_hover || over_bars {
+    let touch_id = egui::Id::new(("pc-canvas-touch", idx));
+    let (touch, any_touches) = ctx.input(|i| (i.multi_touch(), i.any_touches()));
+    let was_touch = ctx.data(|d| d.get_temp::<bool>(touch_id)).unwrap_or(false);
+    let owns_touch = was_touch || touch.is_some_and(|t| rect.contains(t.start_pos));
+    // Keep tools suppressed until all fingers lift, including the final pointer release.
+    let touch_navigation = owns_touch && (was_touch || touch.is_some());
+    ctx.data_mut(|d| d.insert_temp(touch_id, owns_touch && any_touches));
+    if touch_navigation {
+        if let Some(touch) = touch {
+            touch_navigate(&mut view, &xf, touch.center_pos, touch.translation_delta, touch.zoom_delta, ppp);
+        }
+        if primary {
+            // Live brush pixels are a preview: dropping it cannot commit a stray stroke.
+            app.drag = None;
+            app.live_stroke = None;
+        }
+        ctx.request_repaint();
+    }
+    if !touch_navigation && touch.is_none() && (response.hovered() || free_hover || over_bars) {
         let pointer = ui.input(|i| i.pointer.hover_pos());
         match (wheel, pointer) {
             (Some(crate::wheel_nav::Wheel::Zoom(f)), Some(p)) => {
@@ -2767,7 +2785,7 @@ pub fn canvas_view(app: &mut PhotocraftApp, ui: &mut egui::Ui, idx: usize, rect:
         _ => alt,
     };
 
-    if under_dialog {
+    if under_dialog && !touch_navigation {
         // With a colour dialog picker armed the image is its eyedropper, whatever the tool; Space
         // and the middle button still pan. Curves uses the same merged-composite sampler as the
         // Color Picker, never the reduced adjustment preview.
@@ -2814,13 +2832,13 @@ pub fn canvas_view(app: &mut PhotocraftApp, ui: &mut egui::Ui, idx: usize, rect:
     // box is only drawn and driven on the primary canvas.
     let transform_owns_pointer = primary && app.ui.transform.is_some() && temporary.is_none() && !middle;
     let hand_pan = tool == Tool::Hand && !transform_owns_pointer;
-    if hand_pan && response.dragged() {
+    if !touch_navigation && hand_pan && response.dragged() {
         let d = xf.unmap_vec(response.drag_delta()) / (view.zoom / ppp);
         view.center[0] -= d.x;
         view.center[1] -= d.y;
         // The tool cursors below are skipped while panning: the fist is set here (#2196).
         ctx.set_cursor_icon(crate::tool_cursor::hand(&ctx, true));
-    } else if primary {
+    } else if primary && !touch_navigation {
         let mods = ui.input(|i| i.modifiers);
         // An ⌥-click the window manager took never arrives; say so (alt_grab.rs).
         crate::alt_grab::watch(app, &ctx, egui::Id::new(("pc-alt-grab", idx)), rect, tool, !under_dialog);
@@ -3372,6 +3390,18 @@ pub fn canvas_view(app: &mut PhotocraftApp, ui: &mut egui::Ui, idx: usize, rect:
         app.ui.views[idx] = view.clone();
     }
     view
+}
+
+/// Move the document point beneath the previous touch centroid to the new centroid.
+fn touch_navigate(view: &mut View, xf: &ViewXform, center: Pos2, translation: Vec2, factor: f32, ppp: f32) {
+    if !center.is_finite() || !translation.is_finite() || !factor.is_finite() || factor <= 0.0 {
+        return;
+    }
+    let new_zoom = crate::zoom_levels::clamp(view.zoom * factor, view.doc_size);
+    zoom_about(view, xf, center - translation, new_zoom, false, ppp);
+    let delta = xf.unmap_vec(translation) / (view.zoom / ppp);
+    view.center[0] -= delta.x;
+    view.center[1] -= delta.y;
 }
 
 /// Zoom to `new_zoom` about the pointer `p`. By default the document point under it stays under
@@ -6339,6 +6369,74 @@ mod tests {
             assert!((view.center[0] - doc[0] as f32).abs() < 0.5, "ppp {ppp}: {:?}", view.center);
             assert!((view.center[1] - doc[1] as f32).abs() < 0.5, "ppp {ppp}: {:?}", view.center);
         }
+    }
+
+    #[test]
+    fn touch_navigation_keeps_the_document_under_the_moving_centroid() {
+        for ppp in [1.0, 2.0, 3.0] {
+            for rotation in [0.0, 37.0, -90.0] {
+                for flip in [false, true] {
+                    for factor in [0.5, 1.0, 2.0] {
+                        let rect = Rect::from_min_size(Pos2::ZERO, vec2(800.0, 600.0));
+                        let xf = ViewXform { rect, zoom: 1.0 / ppp, center: [400.0, 300.0], flip, rotation, aspect: 1.3 };
+                        let start = pos2(320.0, 240.0);
+                        let delta = vec2(45.0, -25.0);
+                        let anchor = xf.to_doc(start);
+                        let mut view = View { zoom: 1.0, center: xf.center, doc_size: [800, 600], ..Default::default() };
+                        touch_navigate(&mut view, &xf, start + delta, delta, factor, ppp);
+                        let after = ViewXform { zoom: view.zoom / ppp, center: view.center, ..xf };
+                        assert!((after.to_screen(anchor[0] as f32, anchor[1] as f32) - (start + delta)).length() < 0.01);
+                        assert_eq!(view.zoom, factor);
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn touch_navigation_cancels_brush_and_swallows_remaining_finger() {
+        let mut app = PhotocraftApp::new(photocraft_engine::Session::new(), Default::default());
+        app.run("file.new", json!({"width": 64, "height": 64, "background": "transparent"})).unwrap();
+        app.ui.tool = Tool::Brush;
+        let ctx = egui::Context::default();
+        let rect = Rect::from_min_size(Pos2::ZERO, vec2(800.0, 600.0));
+        let step = |events: Vec<egui::Event>, app: &mut PhotocraftApp| {
+            let input = egui::RawInput { screen_rect: Some(rect), events, ..Default::default() };
+            let mut output = ctx.run_ui(input, |ui| {
+                let view = app.ui.views[0].clone();
+                canvas_view(app, ui, 0, rect, view, true);
+            });
+            output.textures_delta.clear();
+        };
+        let touch = |id, phase, p| egui::Event::Touch { device_id: egui::TouchDeviceId(1), id: egui::TouchId(id), phase, pos: p, force: None };
+        let p = pos2(350.0, 280.0);
+        step(vec![egui::Event::PointerMoved(p), touch(1, egui::TouchPhase::Start, p)], &mut app);
+        tool_event(&mut app, ToolEvent::Down { x: 20.0, y: 20.0, pressure: 1.0 }, egui::Modifiers::NONE);
+        assert!(app.drag.is_some());
+        step(vec![touch(2, egui::TouchPhase::Start, p + vec2(100.0, 0.0))], &mut app);
+        assert!(app.drag.is_none() && app.live_stroke.is_none());
+        let zoom = app.ui.views[0].zoom;
+        step(vec![touch(1, egui::TouchPhase::Move, p - vec2(30.0, 0.0)), touch(2, egui::TouchPhase::Move, p + vec2(130.0, 0.0))], &mut app);
+        assert!(app.ui.views[0].zoom > zoom);
+        step(vec![touch(2, egui::TouchPhase::End, p + vec2(130.0, 0.0))], &mut app);
+        step(vec![egui::Event::PointerMoved(p + vec2(20.0, 0.0)), touch(1, egui::TouchPhase::Move, p + vec2(20.0, 0.0))], &mut app);
+        step(vec![touch(1, egui::TouchPhase::End, p)], &mut app);
+        assert!(app.drag.is_none());
+        assert!(!app.session.journal.iter().any(|(id, _)| id == "paint.stroke"));
+    }
+
+    #[test]
+    fn touch_navigation_rejects_invalid_input_and_clamps_zoom() {
+        let rect = Rect::from_min_size(Pos2::ZERO, vec2(800.0, 600.0));
+        let xf = ViewXform { rect, zoom: 1.0, center: [400.0, 300.0], flip: false, rotation: 0.0, aspect: 1.0 };
+        let mut view = View { zoom: 1.0, center: xf.center, doc_size: [800, 600], ..Default::default() };
+        for factor in [f32::NAN, f32::INFINITY, -1.0, 0.0] {
+            touch_navigate(&mut view, &xf, rect.center(), Vec2::ZERO, factor, 1.0);
+            assert_eq!(view.zoom, 1.0);
+            assert_eq!(view.center, xf.center);
+        }
+        touch_navigate(&mut view, &xf, rect.center(), Vec2::ZERO, 1000.0, 1.0);
+        assert_eq!(view.zoom, crate::zoom_levels::MAX);
     }
 
     #[test]

@@ -532,6 +532,10 @@ pub(crate) fn system_font_dirs() -> Vec<std::path::PathBuf> {
         if let Some(l) = std::env::var_os("LOCALAPPDATA") {
             v.push(PathBuf::from(l).join("Microsoft\\Windows\\Fonts"));
         }
+    } else if cfg!(target_os = "android") {
+        v.push(PathBuf::from("/system/fonts"));
+        v.push(PathBuf::from("/product/fonts"));
+        v.push(PathBuf::from("/data/fonts"));
     } else {
         v.push(PathBuf::from("/usr/share/fonts"));
         v.push(PathBuf::from("/usr/local/share/fonts"));

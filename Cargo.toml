@@ -2,6 +2,8 @@
 resolver = "3"
 members = ["crates/*", "apps/*", "xtask"]
 default-members = ["crates/*", "apps/photocraft", "apps/photocraft-cli", "xtask"]
+# The Android app is not in default-members: build with
+#   cargo ndk -t arm64-v8a -o apps/photocraft-android/android/app/src/main/jniLibs build -p photocraft-android
 
 [workspace.package]
 version = "0.7.0"

@@ -249,6 +249,22 @@ pub fn font_files(script: CjkScript) -> Vec<FontFile> {
             TraditionalChinese => vec![w("msjh.ttc", "Microsoft JhengHei"), w("msjh.ttf", ""), w("mingliu.ttc", "")],
             Korean => vec![w("malgun.ttf", ""), w("gulim.ttc", "")],
         }
+    } else if cfg!(target_os = "android") {
+        let noto = match script {
+            Japanese => "Noto Sans CJK JP",
+            SimplifiedChinese => "Noto Sans CJK SC",
+            TraditionalChinese => "Noto Sans CJK TC",
+            Korean => "Noto Sans CJK KR",
+        };
+        // Android ships Noto CJK fonts under /system/fonts; exact names vary by version.
+        let mut v: Vec<FontFile> = ["/system/fonts/NotoSansCJK-Regular.ttc", "/system/fonts/NotoSansCJK-VF.ttc"].iter().map(|p| f(p, noto)).collect();
+        v.extend(match script {
+            Japanese => vec![f("/system/fonts/NotoSansJP-Regular.otf", ""), f("/system/fonts/DroidSansJapanese.ttf", "")],
+            SimplifiedChinese => vec![f("/system/fonts/NotoSansSC-Regular.otf", ""), f("/system/fonts/NotoSansHans-Regular.otf", "")],
+            TraditionalChinese => vec![f("/system/fonts/NotoSansTC-Regular.otf", ""), f("/system/fonts/NotoSansHant-Regular.otf", "")],
+            Korean => vec![f("/system/fonts/NotoSansKR-Regular.otf", ""), f("/system/fonts/DroidSansKorean.ttf", "")],
+        });
+        v
     } else {
         // One Noto Sans CJK collection covers all four scripts; the face picks the glyph forms.
         let noto = match script {
@@ -326,6 +342,8 @@ pub fn last_resort_files() -> Vec<FontFile> {
     } else if cfg!(target_os = "windows") {
         let dir = std::env::var("WINDIR").unwrap_or_else(|_| "C:\\Windows".into());
         vec![FontFile { path: std::path::Path::new(&dir).join("Fonts").join("ARIALUNI.TTF"), family: "" }]
+    } else if cfg!(target_os = "android") {
+        vec![f("/system/fonts/DroidSansFallback.ttf"), f("/system/fonts/DroidSansFallbackFull.ttf"), f("/system/fonts/NotoSansCJK-Regular.ttc")]
     } else {
         with_flatpak_host_fonts(vec![
             f("/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf"),
