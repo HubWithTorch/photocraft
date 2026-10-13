@@ -2591,3 +2591,20 @@ cameraData	Lens	Objetivo
 	There is no crop size or ratio to save	No hay ningún tamaño ni proporción de recorte que guardar
 	Search settings…	Buscar ajustes…
 	No matching settings	No hay ajustes que coincidan
+	Cancel Sampling	Cancelar muestreo
+	Clear Modifiers	Soltar modificadores
+	Close selection	Cerrar selección
+	Commit crop	Aplicar recorte
+	Commit transform	Aplicar transformación
+	Pick Color Once	Tomar color
+	Set Sample Point	Definir punto de muestra
+	Show Panels	Mostrar paneles
+	Tap Set Sample Point, then tap the image	Pulsa Definir punto de muestra y luego la imagen
+	Tap inside the image to sample	Toca dentro de la imagen para tomar la muestra
+	Tap this, then tap the image. Drawing resumes automatically.	Pulsa aquí y luego la imagen. El dibujo se reanuda automáticamente.
+	Touch Controls	Controles táctiles
+	Touch Tools	Todas las herramientas
+	Add to selection	Añadir a la selección
+	Subtract from selection	Sustraer de la selección
+	Intersect with selection	Intersecar con la selección
+	Brush Size	Tamaño del pincel

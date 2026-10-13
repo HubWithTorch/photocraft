@@ -3529,3 +3529,19 @@ cameraData	Lens	レンズ
 	There is no crop size or ratio to save	保存する切り抜きのサイズまたは比率がありません
 	Search settings…	設定を検索…
 	No matching settings	一致する設定はありません
+	Cancel Sampling	採取をキャンセル
+	Clear Modifiers	修飾キーを解除
+	Close selection	選択範囲を閉じる
+	Commit crop	切り抜きを適用
+	Commit transform	変形を適用
+	Pick Color Once	色を採取
+	Set Sample Point	サンプル点を設定
+	Show Panels	パネルを表示
+	Tap Set Sample Point, then tap the image	サンプル点を設定を押してから画像をタップ
+	Tap inside the image to sample	画像の内側をタップして採取
+	Tap this, then tap the image. Drawing resumes automatically.	このボタンを押して画像をタップすると採取し、その後は描画に戻ります。
+	Touch Controls	タッチ操作バー
+	Touch Tools	すべてのツール
+	Add to selection	選択範囲に追加
+	Subtract from selection	選択範囲から除外
+	Intersect with selection	選択範囲との共通部分

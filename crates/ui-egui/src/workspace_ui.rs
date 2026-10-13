@@ -117,6 +117,9 @@ pub fn menu(app: &mut PhotocraftApp, id: &str, params: &Value) -> Option<Result<
     let s = &mut app.ui.shell;
     Some(match id {
         "window.panel.modifierKeys" => {
+            if let Some(on) = params.get("touchControls").and_then(Value::as_bool) {
+                app.ui.touch.enabled = on;
+            }
             s.modifier_keys = params.get("show").and_then(Value::as_bool).unwrap_or(!s.modifier_keys);
             for (k, slot) in [("shift", &mut s.sticky_shift), ("command", &mut s.sticky_command), ("alt", &mut s.sticky_alt)] {
                 if let Some(v) = params.get(k).and_then(Value::as_bool) {
@@ -341,11 +344,13 @@ pub fn windows(app: &mut PhotocraftApp, ctx: &egui::Context) {
     if app.ui.shell.modifier_keys {
         let mut close = false;
         let mut s = app.ui.shell.clone();
+        let mut touch_enabled = app.ui.touch.enabled;
         let cmd = crate::shortcuts::pretty("Cmd");
         let shift = crate::shortcuts::pretty("Shift");
         let alt = crate::shortcuts::pretty("Alt");
         crate::analysis_ui::panel_window(app, ctx, "modifier-keys", tl!("Modifier Keys"), vec2(-420.0, 80.0), 150.0, |ui| {
             close = crate::analysis_ui::title_row(ui, tl!("Modifier Keys"));
+            ui.checkbox(&mut touch_enabled, tl!("Touch Controls"));
             ui.horizontal(|ui| {
                 for (label, on) in [(&*shift, &mut s.sticky_shift), (&*cmd, &mut s.sticky_command), (&*alt, &mut s.sticky_alt)] {
                     if ui.add(egui::Button::new(RichText::new(label).size(14.0)).selected(*on).min_size(vec2(40.0, 30.0))).clicked() {
@@ -356,6 +361,7 @@ pub fn windows(app: &mut PhotocraftApp, ctx: &egui::Context) {
         });
         s.modifier_keys = !close;
         app.ui.shell = s;
+        app.ui.touch.enabled = touch_enabled;
     }
     if app.ui.shell.dialog.is_some() {
         dialog(app, ctx);

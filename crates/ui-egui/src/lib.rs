@@ -173,6 +173,7 @@ mod tool_cursor;
 pub mod tool_feedback;
 pub(crate) mod tool_memory;
 mod tool_reset;
+pub mod touch_ui;
 pub mod transform_tex;
 pub mod transform_tool;
 mod type_font_preview;
@@ -1515,6 +1516,7 @@ impl eframe::App for PhotocraftApp {
     }
 
     fn raw_input_hook(&mut self, ctx: &egui::Context, raw_input: &mut egui::RawInput) {
+        touch_ui::raw_input(self, raw_input);
         // An undecorated window gets its caption back when the toolkit changes its flags
         // (maximize, restore, …): take it off again before the frame is laid out (#2246).
         if let Some(window_frame) = self.services.window_frame.as_mut() {
@@ -1582,6 +1584,7 @@ impl eframe::App for PhotocraftApp {
         if chrome && self.ui.panels.status_bar {
             panels::status_bar(self, ui);
         }
+        touch_ui::bar(self, ui);
         if chrome && self.ui.panels.toolbar {
             panels::toolbar(self, ui);
         }

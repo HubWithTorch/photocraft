@@ -3097,3 +3097,19 @@ cameraData	Lens	렌즈
 	There is no crop size or ratio to save	저장할 자르기 크기나 비율이 없습니다
 	Search settings…	설정 검색…
 	No matching settings	일치하는 설정 없음
+	Cancel Sampling	샘플링 취소
+	Clear Modifiers	보조 키 해제
+	Close selection	선택 영역 닫기
+	Commit crop	자르기 적용
+	Commit transform	변형 적용
+	Pick Color Once	색상 추출
+	Set Sample Point	샘플 지점 설정
+	Show Panels	패널 표시
+	Tap Set Sample Point, then tap the image	샘플 지점 설정을 누른 후 이미지를 누르세요
+	Tap inside the image to sample	이미지 내부를 눌러 샘플을 선택하세요
+	Tap this, then tap the image. Drawing resumes automatically.	이 버튼을 누른 후 이미지를 누르세요. 이후 그리기가 자동으로 재개됩니다.
+	Touch Controls	터치 조작 막대
+	Touch Tools	모든 도구
+	Add to selection	선택 영역에 추가
+	Subtract from selection	선택 영역에서 빼기
+	Intersect with selection	선택 영역과 교차

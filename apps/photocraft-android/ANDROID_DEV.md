@@ -44,3 +44,18 @@ baseline was updated. These results apply to the tested 0.7.0 build, not future 
 
 The two existing unsafe JNI bootstrap calls are an explicit upstream-review item.
 The original development notes are preserved locally in log/android-development-history.md.
+
+## Alpha.3 touch tools (2026-10-13)
+
+One-shot Clone/Healing source sampling consumes the complete pointer gesture, including
+a duplicate Down on click release, so sampling never starts an accidental zero-offset
+stroke. The bottom tray exposes color sampling, history, tool browsing, brush size,
+selection modes and existing sticky modifiers. Layer rows now honor those modifiers.
+
+On the 0.7.0 release source: 1960 UI tests passed (10 ignored), including seven new
+touch tests; three pinch tests, host/cross clippy, layers and wasm passed. The release
+APK was installed on Lenovo TB378FC / Android 16. ADB verified clone, Undo/Redo,
+color sampling, brush size and selection add/subtract/deselect. The quick layout
+benchmark completed; no baseline was updated and tablet frame time was not measured.
+Crop/transform completion, polygon closure, fullscreen recovery and physical pinch
+feel still require device confirmation. [Screenshots and reproduction steps](../../docs/android-touch-controls.md).

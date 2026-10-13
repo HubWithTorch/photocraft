@@ -956,6 +956,8 @@ pub struct ColorPanelState {
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct UiState {
     pub tool: Tool,
+    #[serde(default)]
+    pub touch: crate::touch_ui::TouchUi,
     /// The last tool used in each shortcut group (the tools sharing a key, [`Tool::key`]), at most
     /// one per group: the group's key brings it back, as in Photoshop (#2608).
     #[serde(default)]
@@ -1156,6 +1158,7 @@ impl Default for UiState {
     fn default() -> Self {
         Self {
             tool: Tool::Brush,
+            touch: Default::default(),
             group_tools: Vec::new(),
             recent_files: Vec::new(),
             text_edit: None,

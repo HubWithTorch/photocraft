@@ -110,3 +110,9 @@ Files copied into `corpus/` by hand (tiff, exr, raw) must be MIT, BSD or CC0.
 | Path | Title | Author | Source | License |
 |---|---|---|---|---|
 | `apps/photocraft-android/android/gradlew`, `gradlew.bat`, `gradle/wrapper/gradle-wrapper.jar` | Gradle wrapper | Gradle contributors | https://github.com/gradle/gradle/tree/v8.11.1/gradle/wrapper | Apache-2.0, [`LICENSE-APACHE`](apps/photocraft-android/android/gradle/wrapper/LICENSE-APACHE) |
+
+## Android touch documentation
+
+| Path | Title | Author | Source | License |
+|---|---|---|---|---|
+| `docs/images/android-touch/*.png` | Android before/after touch workflow captures using an original synthetic fixture | @HubWithTorch | Original ADB device screenshots, 2026-10-12; [provenance](docs/images/android-touch/README.md) | Original contributions MIT OR Apache-2.0; [MIT](docs/images/android-touch/LICENSE-MIT), [Apache-2.0](docs/images/android-touch/LICENSE-APACHE); displayed UI assets retain their existing licenses |

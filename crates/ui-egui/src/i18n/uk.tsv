@@ -3616,3 +3616,19 @@ cameraData	Lens	Об'єктив
 	Select the crop presets to delete	Виберіть набори параметрів кадрування для видалення
 	Enter a name for the crop preset	Введіть назву набору параметрів кадрування
 	There is no crop size or ratio to save	Немає розміру чи співвідношення сторін кадрування для збереження
+	Cancel Sampling	Скасувати вибір зразка
+	Clear Modifiers	Скинути модифікатори
+	Close selection	Замкнути виділення
+	Commit crop	Застосувати кадрування
+	Commit transform	Застосувати трансформацію
+	Pick Color Once	Взяти колір
+	Set Sample Point	Задати точку зразка
+	Show Panels	Показати панелі
+	Tap Set Sample Point, then tap the image	Натисніть «Задати точку зразка», а потім торкніться зображення
+	Tap inside the image to sample	Торкніться всередині зображення для вибору зразка
+	Tap this, then tap the image. Drawing resumes automatically.	Натисніть тут, а потім торкніться зображення. Малювання відновиться автоматично.
+	Touch Controls	Сенсорна панель
+	Touch Tools	Усі інструменти
+	Add to selection	Додати до виділення
+	Subtract from selection	Відняти від виділення
+	Intersect with selection	Перетнути з виділенням

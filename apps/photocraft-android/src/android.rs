@@ -216,6 +216,7 @@ fn run(app: AndroidApp) -> Result<(), String> {
                 writer.write(&uri, bytes)
             }));
             let mut editor = PhotocraftApp::new(photocraft_engine::Session::new(), services);
+            editor.ui.touch.enabled = true;
             if let Some(rs) = cc.wgpu_render_state.clone() {
                 editor.set_wgpu(rs);
             }

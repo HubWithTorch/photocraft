@@ -47,3 +47,11 @@ See [ANDROID_DEV.md](ANDROID_DEV.md) for the tested build and evidence. The desk
 panel layout is retained; phone portrait layout, larger touch targets and stylus
 axis mapping still need work. Do not present this community Android build as an
 upstream official release.
+
+## Keyboard-free tools (alpha.3)
+
+Android enables a bottom touch tray. Clone Stamp/Healing: tap Set Sample Point, tap
+the source, then draw. The tray also provides one-shot color picking, Undo/Redo, a
+scrollable tool browser, brush sizes, selection modes and latched Shift/Alt/Ctrl.
+See the [illustrated before/after walkthrough](../../docs/android-touch-controls.md)
+for device evidence and remaining limitations.

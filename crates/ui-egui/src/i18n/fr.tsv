@@ -2928,3 +2928,19 @@ cameraData	Lens	Objectif
 	There is no crop size or ratio to save	Aucune taille ni proportion de recadrage à enregistrer
 	Search settings…	Rechercher des réglages…
 	No matching settings	Aucun réglage correspondant
+	Cancel Sampling	Annuler le prélèvement
+	Clear Modifiers	Relâcher les modificateurs
+	Close selection	Fermer la sélection
+	Commit crop	Appliquer le recadrage
+	Commit transform	Appliquer la transformation
+	Pick Color Once	Prélever une couleur
+	Set Sample Point	Définir le point source
+	Show Panels	Afficher les panneaux
+	Tap Set Sample Point, then tap the image	Touchez Définir le point source, puis l’image
+	Tap inside the image to sample	Touchez dans l’image pour prélever
+	Tap this, then tap the image. Drawing resumes automatically.	Touchez ici, puis l’image. Le dessin reprend automatiquement.
+	Touch Controls	Commandes tactiles
+	Touch Tools	Tous les outils
+	Add to selection	Ajouter à la sélection
+	Subtract from selection	Soustraire de la sélection
+	Intersect with selection	Intersection avec la sélection

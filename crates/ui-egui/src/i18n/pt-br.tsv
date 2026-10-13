@@ -2936,3 +2936,19 @@ cameraData	Lens	Lente
 	There is no crop size or ratio to save	Não há tamanho nem proporção de corte para salvar
 	Search settings…	Pesquisar configurações…
 	No matching settings	Nenhuma configuração encontrada
+	Cancel Sampling	Cancelar amostragem
+	Clear Modifiers	Soltar modificadores
+	Close selection	Fechar seleção
+	Commit crop	Aplicar corte
+	Commit transform	Aplicar transformação
+	Pick Color Once	Capturar cor
+	Set Sample Point	Definir ponto de amostra
+	Show Panels	Mostrar painéis
+	Tap Set Sample Point, then tap the image	Toque em Definir ponto de amostra e depois na imagem
+	Tap inside the image to sample	Toque dentro da imagem para capturar a amostra
+	Tap this, then tap the image. Drawing resumes automatically.	Toque aqui e depois na imagem. O desenho será retomado automaticamente.
+	Touch Controls	Controles de toque
+	Touch Tools	Todas as ferramentas
+	Add to selection	Adicionar à seleção
+	Subtract from selection	Subtrair da seleção
+	Intersect with selection	Fazer interseção com a seleção

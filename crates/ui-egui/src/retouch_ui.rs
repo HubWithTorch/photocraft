@@ -107,7 +107,9 @@ pub fn finish_stroke(app: &mut PhotocraftApp, tool: Tool, points: &[[f64; 3]], m
         Tool::Healing | Tool::CloneStamp => {
             let Some(p) = clone_params(app) else {
                 // Option-click on the Mac, Alt-click on Windows.
-                app.ui.status = if cfg!(target_os = "macos") {
+                app.ui.status = if app.ui.touch.enabled {
+                    tl!("Tap Set Sample Point, then tap the image")
+                } else if cfg!(target_os = "macos") {
                     tl!("Option-click to define a source point to clone from")
                 } else {
                     tl!("Alt-click to define a source point to clone from")
@@ -399,7 +401,11 @@ pub fn options_bar(app: &mut PhotocraftApp, ui: &mut egui::Ui, tool: Tool) -> bo
             crate::widgets::dropdown(ui, "clone-sample", &mut o.clone_sample, &opts, 130.0);
             if app.ui.clone_source.is_none() {
                 crate::widgets::vline(ui, 22.0);
-                opt(ui, &crate::i18n::fmt(tl!("{key}-click to set the source"), &[("key", &crate::shortcuts::pretty("Alt"))]));
+                if app.ui.touch.enabled {
+                    opt(ui, tl!("Tap Set Sample Point, then tap the image"));
+                } else {
+                    opt(ui, &crate::i18n::fmt(tl!("{key}-click to set the source"), &[("key", &crate::shortcuts::pretty("Alt"))]));
+                }
             }
         }
         Tool::Dodge | Tool::Burn => {

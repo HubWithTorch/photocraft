@@ -2581,3 +2581,20 @@ cameraData	Lens	Obiettivo
 	There is no crop size or ratio to save	Non c'è nessuna dimensione o proporzione di ritaglio da salvare
 	Search settings…	Cerca impostazioni…
 	No matching settings	Nessuna impostazione corrispondente
+	Cancel Sampling	Annulla campionamento
+	Clear Modifiers	Rilascia modificatori
+	Close selection	Chiudi selezione
+	Commit crop	Applica ritaglio
+	Commit transform	Applica trasformazione
+	Pick Color Once	Preleva colore
+	Set Sample Point	Imposta punto campione
+	Show Panels	Mostra pannelli
+	Tap Set Sample Point, then tap the image	Tocca Imposta punto campione, poi l’immagine
+	Tap inside the image to sample	Tocca all’interno dell’immagine per campionare
+	Tap this, then tap the image. Drawing resumes automatically.	Tocca qui, poi l’immagine. Il disegno riprende automaticamente.
+	Touch Controls	Controlli touch
+	Touch Tools	Tutti gli strumenti
+	Add to selection	Aggiungi alla selezione
+	Subtract from selection	Sottrai da selezione
+	Intersect with selection	Interseca con selezione
+	Brush Size	Dimensione pennello
